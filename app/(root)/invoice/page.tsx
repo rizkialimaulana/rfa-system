@@ -11,7 +11,7 @@ async function getData(): Promise<any[]> {
       id: "728ed52f",
       amount: 100,
       status: "pending",
-      date: "m@example.com",
+      date: "27 April 2025",
       name: "Bank BTN KC. Sukabumi",
     },
   ];
