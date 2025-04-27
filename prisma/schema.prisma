@@ -14,7 +14,8 @@ model Invoice {
   received_bank String
   created_at    DateTime     @default(now())
   updated_at    DateTime     @updatedAt
-  items         InvoiceItem[]   // Relasi ke items
+  items         InvoiceItem[]
+  total_amount  Decimal  @db.Decimal(15,2)
 }
 
 model InvoiceItem {

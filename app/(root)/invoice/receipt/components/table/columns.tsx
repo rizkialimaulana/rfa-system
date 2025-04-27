@@ -14,7 +14,7 @@ import {
 
 export type Payment = {
   id: string;
-  amount: number;
+  total_amount: string;
   status: "pending" | "processing" | "success" | "failed";
   date: string;
   name: string;
@@ -24,6 +24,9 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "date",
     header: "Tanggal",
+    cell: ({ row }) => {
+      return new Date(row.original.date).toLocaleDateString("id-ID");
+    },
   },
   {
     accessorKey: "name",
@@ -31,7 +34,19 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: "Jumlah",
+    cell: ({ row }) => {
+      // Mengonversi string ke number
+      const totalAmount = parseFloat(row.original.total_amount);
+
+      // Memastikan konversi berhasil
+      if (isNaN(totalAmount)) {
+        return "Rp. 0";
+      }
+
+      // Mengembalikan formatted string dengan thousand separator
+      return `Rp. ${totalAmount.toLocaleString("id-ID")}`;
+    },
   },
   {
     id: "actions",

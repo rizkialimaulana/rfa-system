@@ -56,6 +56,7 @@ const formSchema = z.object({
       price: z.number(),
     })
   ),
+  total_amount: z.number(),
   received_bank: z.string().min(2, {
     message: "Nama Bank Harus Diisi.",
   }),
@@ -73,6 +74,7 @@ const CreateInvoicePage: FC<CreateInvoicePageProps> = ({ breadcrumb }) => {
       date: new Date(),
       name: "",
       items: [],
+      total_amount: 0,
       received_bank: "",
     },
   });
@@ -81,7 +83,13 @@ const CreateInvoicePage: FC<CreateInvoicePageProps> = ({ breadcrumb }) => {
     try {
       const res = await fetch("/api/invoice", {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          total_amount: values.items.reduce(
+            (total, item) => total + item.quantity * item.price,
+            0
+          ),
+        }),
         headers: {
           "Content-Type": "application/json",
         },
