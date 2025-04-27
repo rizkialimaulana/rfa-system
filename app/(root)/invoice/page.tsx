@@ -1,3 +1,4 @@
+import { INVOICE_LIST_API_URL } from "@/constant";
 import InvoicePage from "./components/invoice-page";
 
 const breadcrumb = [
@@ -6,19 +7,25 @@ const breadcrumb = [
 ];
 
 async function getData(): Promise<any[]> {
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      date: "m@example.com",
-      name: "Bank BTN KC. Sukabumi",
-    },
-  ];
+  const response = await fetch(INVOICE_LIST_API_URL);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch invoices");
+  }
+
+  const data = await response.json();
+  return data;
 }
 
 export default async function Invoice() {
-  const data = await getData();
+  let data = [];
+  try {
+    data = await getData();
+  } catch (error) {
+    console.error("Error fetching invoice data:", error);
+  }
+
+  console.log(data);
 
   return <InvoicePage data={data} breadcrumb={breadcrumb} />;
 }

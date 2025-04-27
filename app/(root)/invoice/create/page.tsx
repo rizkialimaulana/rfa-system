@@ -1,7 +1,11 @@
-import React from "react";
+import CreateInvoice from "./components/create-invoice-page";
 
-const CreateInvoicePage = () => {
-  return <div>CreateInvoicePage</div>;
-};
+const breadcrumb = [
+  { title: "Dashboard", url: "/" },
+  { title: "Invoice", url: "/invoice" },
+  { title: "Buat Invoice", url: "/invoice/create" },
+];
 
-export default CreateInvoicePage;
+export default async function Invoice() {
+  return <CreateInvoice breadcrumb={breadcrumb} />;
+}

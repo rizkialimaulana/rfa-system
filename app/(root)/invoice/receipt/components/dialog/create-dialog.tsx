@@ -36,14 +36,6 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 const formSchema = z.object({
   date: z.date(),
   name: z.string().min(2, {
@@ -53,13 +45,9 @@ const formSchema = z.object({
     z.object({
       name: z.string(),
       quantity: z.number(),
-      unit: z.string(),
       price: z.number(),
     })
   ),
-  received_bank: z.string().min(2, {
-    message: "Nama Bank Harus Diisi.",
-  }),
 });
 
 const CreateDialog = ({
@@ -75,7 +63,6 @@ const CreateDialog = ({
       date: new Date(),
       name: "",
       items: [],
-      received_bank: "",
     },
   });
 
@@ -96,73 +83,70 @@ const CreateDialog = ({
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-6 mt-5"
             >
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Tanggal</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nama Cabang</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Masukan Nama Cabang" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
               {/* Tanggal */}
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Tanggal</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nama Cabang</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Masukan Nama Cabang" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {/* Items */}
               {form.watch("items").length > 0 && (
                 <div className="border p-4 rounded-md">
-                  <div className="mb-3 grid grid-cols-4">
+                  <div className="mb-3 grid grid-cols-3">
                     <FormLabel>Nama</FormLabel>
                     <FormLabel>Jumlah</FormLabel>
-                    <FormLabel>Satuan</FormLabel>
                     <FormLabel>Harga</FormLabel>
                   </div>
                   {form.watch("items").map((_, index) => (
@@ -198,20 +182,6 @@ const CreateDialog = ({
                                   field.onChange(Number(e.target.value))
                                 }
                               />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Unit */}
-                      <FormField
-                        control={form.control}
-                        name={`items.${index}.unit`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input placeholder="Satuan" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -258,33 +228,6 @@ const CreateDialog = ({
                 </div>
               )}
 
-              {form.watch("items").length === 0 && (
-                <div className="border p-4 rounded-md">
-                  <p className="text-center">
-                    Silahkan klik tombol tambah barang
-                  </p>
-                </div>
-              )}
-
-              {form.watch("items").length > 0 && (
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Bank Penerima" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">
-                      BTN Sukabumi - Rien Sulami
-                    </SelectItem>
-                    <SelectItem value="dark">
-                      BTN Sukabumi - Rien Sulami
-                    </SelectItem>
-                    <SelectItem value="bold">
-                      BTN Sukabumi - Rien Sulami
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-
               {/* Submit */}
               <div className="flex items-center justify-end gap-2">
                 <Button
@@ -292,7 +235,7 @@ const CreateDialog = ({
                   onClick={() =>
                     form.setValue("items", [
                       ...form.getValues("items"),
-                      { name: "", quantity: 0, unit: "", price: 0 },
+                      { name: "", quantity: 0, price: 0 },
                     ])
                   }
                 >

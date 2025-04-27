@@ -12,47 +12,47 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 export type Payment = {
   id: string;
-  total_amount: string;
-  status: "pending" | "processing" | "success" | "failed";
-  date: string;
-  name: string;
+  bank: string;
+  branch: string;
+  address: string;
+  phone_number: number;
+  npwp: string;
+  idtku: string;
 };
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "date",
-    header: "Tanggal",
-    cell: ({ row }) => {
-      return new Date(row.original.date).toLocaleDateString("id-ID");
-    },
+    accessorKey: "bank",
+    header: "Bank",
   },
   {
-    accessorKey: "name",
-    header: "Nama",
+    accessorKey: "branch",
+    header: "Cabang Bank",
   },
   {
-    accessorKey: "total_amount",
-    header: "Jumlah",
-    cell: ({ row }) => {
-      // Mengonversi string ke number
-      const totalAmount = parseFloat(row.original.total_amount);
-
-      // Memastikan konversi berhasil
-      if (isNaN(totalAmount)) {
-        return "Rp. 0";
-      }
-
-      // Mengembalikan formatted string dengan thousand separator
-      return `Rp. ${totalAmount.toLocaleString("id-ID")}`;
-    },
+    accessorKey: "address",
+    header: "Alamat",
+  },
+  {
+    accessorKey: "phone_number",
+    header: "Nomor Telepon",
+  },
+  {
+    accessorKey: "npwp",
+    header: "NPWP",
+  },
+  {
+    accessorKey: "idtku",
+    header: "IDTKU",
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -64,8 +64,8 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Detail</DropdownMenuItem>
-            <DropdownMenuItem>Download Berita Acara</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Hapus</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

@@ -33,7 +33,7 @@ export const columns: ColumnDef<Payment>[] = [
     header: "Nama",
   },
   {
-    accessorKey: "total_amount",
+    accessorKey: "amount",
     header: "Jumlah",
     cell: ({ row }) => {
       // Mengonversi string ke number
@@ -65,7 +65,7 @@ export const columns: ColumnDef<Payment>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View Detail</DropdownMenuItem>
-            <DropdownMenuItem>Download Berita Acara</DropdownMenuItem>
+            <DropdownMenuItem>Download Kwitansi</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

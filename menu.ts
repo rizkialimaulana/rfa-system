@@ -1,4 +1,4 @@
-import { Home, NotebookText, Settings } from "lucide-react";
+import { Home, NotebookText, Settings, Database } from "lucide-react";
 
 export const dummyMenu = [
   {
@@ -23,6 +23,22 @@ export const dummyMenu = [
       {
         title: "Kwitansi",
         url: "/invoice/receipt",
+      },
+    ],
+  },
+  {
+    title: "Master Data",
+    url: "/master-data",
+    icon: Database,
+    has_page: false,
+    sub_menu: [
+      {
+        title: "Akun Bank",
+        url: "/master-data/bank-account",
+      },
+      {
+        title: "Cabang",
+        url: "/master-data/branch",
       },
     ],
   },

@@ -12,47 +12,37 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 export type Payment = {
   id: string;
-  total_amount: string;
-  status: "pending" | "processing" | "success" | "failed";
-  date: string;
   name: string;
+  account_number: number;
+  bank_name: string;
+  bank_branch: string;
 };
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "date",
-    header: "Tanggal",
-    cell: ({ row }) => {
-      return new Date(row.original.date).toLocaleDateString("id-ID");
-    },
+    accessorKey: "bank_name",
+    header: "Bank",
+  },
+  {
+    accessorKey: "bank_branch",
+    header: "Cabang Bank",
   },
   {
     accessorKey: "name",
-    header: "Nama",
+    header: "Atas Nama",
   },
   {
-    accessorKey: "total_amount",
-    header: "Jumlah",
-    cell: ({ row }) => {
-      // Mengonversi string ke number
-      const totalAmount = parseFloat(row.original.total_amount);
-
-      // Memastikan konversi berhasil
-      if (isNaN(totalAmount)) {
-        return "Rp. 0";
-      }
-
-      // Mengembalikan formatted string dengan thousand separator
-      return `Rp. ${totalAmount.toLocaleString("id-ID")}`;
-    },
+    accessorKey: "account_number",
+    header: "Nomor Rekening",
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -64,8 +54,8 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Detail</DropdownMenuItem>
-            <DropdownMenuItem>Download Berita Acara</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Hapus</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
