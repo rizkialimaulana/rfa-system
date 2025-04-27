@@ -11,6 +11,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 interface Props {
   title: string;
@@ -22,14 +24,25 @@ interface Props {
     title: string;
     onClick: any;
   };
+  canBack?: boolean;
 }
 
-const HeaderIntro: FC<Props> = ({ title, breadcrumbs, create }) => {
+const HeaderIntro: FC<Props> = ({ title, breadcrumbs, create, canBack }) => {
+  const route = useRouter();
   return (
     <Card className="mx-3 mt-4">
       <CardContent>
         <div className="flex items-center justify-between">
-          <CardTitle>{title}</CardTitle>
+          <div className="flex items-center gap-3">
+            {canBack && (
+              <ArrowLeft
+                onClick={() => route.back()}
+                className="cursor-pointer"
+                size={20}
+              />
+            )}
+            <CardTitle>{title}</CardTitle>
+          </div>
           {create && (
             <Button variant="outline" onClick={create!.onClick}>
               {create.title}

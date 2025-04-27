@@ -12,32 +12,47 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 export type Payment = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  date: string;
-  name: string;
+  bank: string;
+  branch: string;
+  address: string;
+  phone_number: number;
+  npwp: string;
+  idtku: string;
 };
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "date",
-    header: "Tanggal",
+    accessorKey: "bank",
+    header: "Bank",
   },
   {
-    accessorKey: "name",
-    header: "Nama",
+    accessorKey: "branch",
+    header: "Cabang Bank",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
+    accessorKey: "address",
+    header: "Alamat",
+  },
+  {
+    accessorKey: "phone_number",
+    header: "Nomor Telepon",
+  },
+  {
+    accessorKey: "npwp",
+    header: "NPWP",
+  },
+  {
+    accessorKey: "idtku",
+    header: "IDTKU",
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -49,8 +64,8 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Detail</DropdownMenuItem>
-            <DropdownMenuItem>Download Kwitansi</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Hapus</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

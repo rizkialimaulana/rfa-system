@@ -36,6 +36,10 @@ export const dummyMenu = [
         title: "Akun Bank",
         url: "/master-data/bank-account",
       },
+      {
+        title: "Cabang",
+        url: "/master-data/branch",
+      },
     ],
   },
   {
