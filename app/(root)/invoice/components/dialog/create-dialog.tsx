@@ -36,6 +36,14 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 const formSchema = z.object({
   date: z.date(),
   name: z.string().min(2, {
@@ -45,9 +53,13 @@ const formSchema = z.object({
     z.object({
       name: z.string(),
       quantity: z.number(),
+      unit: z.string(),
       price: z.number(),
     })
   ),
+  received_bank: z.string().min(2, {
+    message: "Nama Bank Harus Diisi.",
+  }),
 });
 
 const CreateDialog = ({
@@ -63,6 +75,7 @@ const CreateDialog = ({
       date: new Date(),
       name: "",
       items: [],
+      received_bank: "",
     },
   });
 
@@ -146,9 +159,10 @@ const CreateDialog = ({
               {/* Items */}
               {form.watch("items").length > 0 && (
                 <div className="border p-4 rounded-md">
-                  <div className="mb-3 grid grid-cols-3">
+                  <div className="mb-3 grid grid-cols-4">
                     <FormLabel>Nama</FormLabel>
                     <FormLabel>Jumlah</FormLabel>
+                    <FormLabel>Satuan</FormLabel>
                     <FormLabel>Harga</FormLabel>
                   </div>
                   {form.watch("items").map((_, index) => (
@@ -184,6 +198,20 @@ const CreateDialog = ({
                                   field.onChange(Number(e.target.value))
                                 }
                               />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Unit */}
+                      <FormField
+                        control={form.control}
+                        name={`items.${index}.unit`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input placeholder="Satuan" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -230,6 +258,33 @@ const CreateDialog = ({
                 </div>
               )}
 
+              {form.watch("items").length === 0 && (
+                <div className="border p-4 rounded-md">
+                  <p className="text-center">
+                    Silahkan klik tombol tambah barang
+                  </p>
+                </div>
+              )}
+
+              {form.watch("items").length > 0 && (
+                <Select>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Bank Penerima" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">
+                      BTN Sukabumi - Rien Sulami
+                    </SelectItem>
+                    <SelectItem value="dark">
+                      BTN Sukabumi - Rien Sulami
+                    </SelectItem>
+                    <SelectItem value="bold">
+                      BTN Sukabumi - Rien Sulami
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+
               {/* Submit */}
               <div className="flex items-center justify-end gap-2">
                 <Button
@@ -237,7 +292,7 @@ const CreateDialog = ({
                   onClick={() =>
                     form.setValue("items", [
                       ...form.getValues("items"),
-                      { name: "", quantity: 0, price: 0 },
+                      { name: "", quantity: 0, unit: "", price: 0 },
                     ])
                   }
                 >

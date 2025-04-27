@@ -21,7 +21,12 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>RFA System</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-4">
+            <div className="flex items-center gap-2">
+              <img src="/cv-rizky.png" alt="Logo" className="w-10 h-10" />
+              <span className="text-lg">RFA System</span>
+            </div>
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {dummyMenu.map((item) =>

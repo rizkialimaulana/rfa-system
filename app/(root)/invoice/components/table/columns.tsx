@@ -62,6 +62,7 @@ export const columns: ColumnDef<Payment>[] = [
         const marginX = 14; // margin kiri
         const tableWidth = 180; // lebar table, kira-kira 210 A4 - margin kiri-kanan
         doc.setFontSize(18);
+        doc.setFont("helvetica", "bold");
         doc.text("CV. Rizky Fitri Akbar", marginX + tableWidth, 20, {
           align: "right",
         });
@@ -73,6 +74,9 @@ export const columns: ColumnDef<Payment>[] = [
           { align: "right" }
         );
         doc.text("rizkyfitriakbar@gmail.com", marginX + tableWidth, 30, {
+          align: "right",
+        });
+        doc.text("081322064575", marginX + tableWidth, 35, {
           align: "right",
         });
 
@@ -87,30 +91,33 @@ export const columns: ColumnDef<Payment>[] = [
         doc.setFontSize(10);
 
         // Jadi untuk posisi teks kanan:
-        doc.text(`Invoice #: ${payment.id}`, marginX + tableWidth, 50, {
-          align: "right",
-        });
-        doc.text(`Email: m@example.com`, marginX + tableWidth, 56, {
-          align: "right",
-        });
-        doc.text(`Terms: Net 30`, marginX + tableWidth, 62, { align: "right" });
-        doc.text(`Due Date: 20/04/2025`, marginX + tableWidth, 68, {
-          align: "right",
-        });
+        const boxX = 125;
+        const boxY = 40;
+        const boxWidth = 70;
+        const boxHeight = 40;
+        doc.setFillColor(240, 240, 240); // light gray
+        doc.rect(boxX, boxY, boxWidth, boxHeight, "F");
 
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.text(`Invoice #: ${payment.id}`, boxX + 5, boxY + 8);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Email: m@example.com`, boxX + 5, boxY + 16);
+        doc.text(`Terms: Net 30`, boxX + 5, boxY + 24);
+        doc.text(`Due Date: 20/04/2025`, boxX + 5, boxY + 32);
+
+        // Nominal besar (di luar kotak)
         doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
         doc.text(
           `Rp. ${payment.amount.toLocaleString("id-ID")}`,
-          marginX + tableWidth,
-          80,
-          {
-            align: "right",
-          }
+          boxX + 5,
+          boxY + boxHeight + 12
         );
 
         // Table of items
         autoTable(doc, {
-          startY: 90,
+          startY: 100,
           head: [
             [
               "NAMA BARANG",
@@ -121,20 +128,8 @@ export const columns: ColumnDef<Payment>[] = [
             ],
           ],
           body: [
-            [
-              "3000 - druk",
-              "Cetak SM52 60 s/d 260gsm - KOP SURAT BTN SYARIAH (HVS 44*33)",
-              "0.0%",
-              "105,00",
-              "315.000,00",
-            ],
-            [
-              "1 - lbr",
-              "Custom Potong - POTONG CETAKAN BAGI 2",
-              "0.0%",
-              "15.000,00",
-              "15.000,00",
-            ],
+            ["Amplop Coklat Kaca Kiri", "1", "Pack", "105,00", "315.000,00"],
+            ["Ban Uang Rp. 100.000", "1", "Ikat", "15.000,00", "15.000,00"],
           ],
           theme: "striped",
         });
@@ -160,9 +155,9 @@ export const columns: ColumnDef<Payment>[] = [
         doc.setFontSize(10);
         doc.text(
           [
-            "Bank Name: BCA",
-            "Bank Branch: Astana Anyar",
-            "Account Name: Felix Yohanes Wijaya",
+            "Bank Name: BTN",
+            "Bank Branch: Bandung Timur",
+            "Account Name: Rien Sulami",
             "Account Number: 7842830888",
             `Payment Reference: ${payment.id}`,
           ],

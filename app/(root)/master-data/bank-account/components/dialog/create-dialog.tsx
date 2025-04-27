@@ -37,17 +37,19 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  date: z.date(),
-  name: z.string().min(2, {
-    message: "Nama Cabang Harus Diisi.",
+  name: z.string({
+    required_error: "Atas Nama harus diisi",
   }),
-  items: z.array(
-    z.object({
-      name: z.string(),
-      quantity: z.number(),
-      price: z.number(),
-    })
-  ),
+  account_number: z.number({
+    required_error: "Nomor rekening harus diisi",
+    invalid_type_error: "Nomor rekening harus berupa angka",
+  }),
+  bank_name: z.string({
+    required_error: "Bank harus diisi",
+  }),
+  bank_branch: z.string({
+    required_error: "Cabang Bank harus diisi",
+  }),
 });
 
 const CreateDialog = ({
@@ -60,9 +62,10 @@ const CreateDialog = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date: new Date(),
       name: "",
-      items: [],
+      account_number: 0,
+      bank_name: "",
+      bank_branch: "",
     },
   });
 
@@ -83,166 +86,62 @@ const CreateDialog = ({
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-6 mt-5"
             >
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Tanggal</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nama Cabang</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Masukan Nama Cabang" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Atas Nama</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Masukan Atas Nama" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="bank_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nama Bank</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Masukan Nama Bank" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="bank_branch"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cabang</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Masukan Cabang" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="account_number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nomor Rekening</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Masukan Nomor Rekening" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {/* Tanggal */}
-
-              {/* Items */}
-              {form.watch("items").length > 0 && (
-                <div className="border p-4 rounded-md">
-                  <div className="mb-3 grid grid-cols-3">
-                    <FormLabel>Nama</FormLabel>
-                    <FormLabel>Jumlah</FormLabel>
-                    <FormLabel>Harga</FormLabel>
-                  </div>
-                  {form.watch("items").map((_, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center space-x-4 mb-3"
-                    >
-                      <FormField
-                        control={form.control}
-                        name={`items.${index}.name`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input placeholder="Barang" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Quantity */}
-                      <FormField
-                        control={form.control}
-                        name={`items.${index}.quantity`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="Quantity"
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Price */}
-                      <FormField
-                        control={form.control}
-                        name={`items.${index}.price`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="Price"
-                                {...field}
-                                onChange={(e) =>
-                                  field.onChange(Number(e.target.value))
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  ))}
-                  <div className="flex items-center justify-end gap-2">
-                    <Label>Total</Label>
-                    <Input
-                      placeholder="Total"
-                      className="w-fit"
-                      type="currency"
-                      disabled
-                      value={form
-                        .watch("items")
-                        .reduce(
-                          (acc, item) => acc + item.price * item.quantity,
-                          0
-                        )}
-                    />
-                  </div>
-                </div>
-              )}
 
               {/* Submit */}
               <div className="flex items-center justify-end gap-2">
-                <Button
-                  type="button"
-                  onClick={() =>
-                    form.setValue("items", [
-                      ...form.getValues("items"),
-                      { name: "", quantity: 0, price: 0 },
-                    ])
-                  }
-                >
-                  Tambah Barang
-                </Button>
                 <Button type="submit">Submit</Button>
               </div>
             </form>
