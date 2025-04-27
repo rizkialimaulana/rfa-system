@@ -77,10 +77,23 @@ const CreateInvoicePage: FC<CreateInvoicePageProps> = ({ breadcrumb }) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    router.push("/invoice");
-    form.reset();
-    toast("Invoice Berhasil Dibuat");
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await fetch("/api/invoice", {
+        method: "POST",
+        body: JSON.stringify(values),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.ok) {
+        console.log("Form successfully submitted!");
+        toast("Invoice Berhasil Dibuat");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
   return (
     <>
